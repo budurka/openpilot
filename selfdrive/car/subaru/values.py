@@ -710,6 +710,7 @@ FW_VERSIONS = {
       b'\x9b\xc0\x10\x00',
       b'\x9b\xc0\x20\x00',
       b'\x1b\xc0\x10\x00',
+      b'+\xc0\x10\x00',   # 2024 Outback EPS
     ],
     (Ecu.fwdCamera, 0x787, None): [
       b'\x00\x00eJ\x00\x1f@ \x19\x00',
