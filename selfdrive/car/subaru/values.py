@@ -711,9 +711,8 @@ FW_VERSIONS = {
     ],
   },
 
-  # --------- UPDATED: 2024 Outback (adds your new ECU FW blobs) ---------
-  CAR.OUTBACK: {
-    # ABS existing ROMs (keep)
+    CAR.OUTBACK: {
+    # ABS (keep existing + add 2024)
     (Ecu.abs, 0x7b0, None): [
       b'\xa1  \x06\x01',
       b'\xa1  \a\x00',
@@ -725,32 +724,29 @@ FW_VERSIONS = {
       b'\xa1  \x07\x02',
       b'\xa1  \x08\x00',
       b'\xa1 "\t\x00',
-      # 2024 Outback ABS (from your scan)
-      b'\xa1 $\x16\x00',
-      # 2024 Outback ABS (from DID F182 comment in your file)
-      b'\xb1 #\x01\x03',
+      b'\xa1 $\x16\x00',  # 2024 Outback ABS
     ],
-    # EPS existing + 2024 EPS from your scan
+
+    # EPS (keep existing + add 2024)
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x10\x00',
       b'\x9b\xc0\x20\x00',
       b'\x1b\xc0\x10\x00',
-      b'+\xc0\x10\x00',
-      b'+\xc0\x10\x11\x00',  # 2024 Outback EPS (new)
+      b'+\xc0\x10\x11\x00',  # 2024 Outback EPS
     ],
-    # Forward camera existing + 2024 camera from your scan
+
+    # Forward camera (keep existing + add 2024)
     (Ecu.fwdCamera, 0x787, None): [
       b'\x00\x00eJ\x00\x1f@ \x19\x00',
       b'\000\000e\x80\000\037@ \031\000',
       b'\x00\x00e\x9a\x00\x00\x00\x00\x00\x00',
       b'\x00\x00e\x9a\x00\x1f@ 1\x00',
       b'\x00\x00eJ\x00\x00\x00\x00\x00\x00',
-      b'\xb1 \x23\x01\x03',
-      # 2024 Outback camera blobs (new)
-      b'\t!\x08\x046\x05!\x08\x01/',
-      b' \x02\x0e',
+      b'\t!\x08\x046\x05!\x08\x01/',  # 2024 Outback camera
+      b' \x02\x0e',                    # 2024 Outback camera
     ],
-    # Engine: keep existing 0x7e0 entries AND add your 0x7a2 entry
+
+    # Engine: keep 0x7e0 entries AND add 0x7a2 for 2024
     (Ecu.engine, 0x7e0, None): [
       b'\xbc,\xa0q\x07',
       b'\xbc\"`@\a',
@@ -765,9 +761,10 @@ FW_VERSIONS = {
       b'\xbc,\xa0u\x07',
     ],
     (Ecu.engine, 0x7a2, None): [
-      b'\xfb"`p\x07',  # 2024 Outback engine (new)
+      b'\xfb"`p\x07',  # 2024 Outback engine
     ],
-    # Transmission: keep existing 0x7e1 entries AND add your 0x7a3 entry
+
+    # Transmission: keep 0x7e1 AND add 0x7a3 for 2024
     (Ecu.transmission, 0x7e1, None): [
       b'\xa5\xfe\xf7@\x00',
       b'\xa5\xf6D@\x00',
@@ -779,7 +776,7 @@ FW_VERSIONS = {
       b'\xa5\xfe\xf8@\x00',
     ],
     (Ecu.transmission, 0x7a3, None): [
-      b'\xa9\x127\x01p',  # 2024 Outback CVT (new)
+      b'\xa9\x127\x01p',  # 2024 Outback CVT
     ],
   },
 }
