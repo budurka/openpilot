@@ -703,6 +703,8 @@ FW_VERSIONS = {
       b'\xa1  \x07\x02',
       b'\xa1  \x08\x00',
       b'\xa1 "\t\x00',
+      # 2024 Outback ABS (from DID F182): b1 20 23 01 03
+      b'\xb1 #\x01\x03',
     ],
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x10\x00',
