@@ -717,6 +717,7 @@ FW_VERSIONS = {
       b'\x00\x00e\x9a\x00\x00\x00\x00\x00\x00',
       b'\x00\x00e\x9a\x00\x1f@ 1\x00',
       b'\x00\x00eJ\x00\x00\x00\x00\x00\x00',
+      b'\xb1 \x23\x01\x03',   # 2024 Outback/Onyx forward camera
     ],
     (Ecu.engine, 0x7e0, None): [
       b'\xbc,\xa0q\x07',
