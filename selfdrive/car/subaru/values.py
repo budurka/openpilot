@@ -104,6 +104,25 @@ CAR_INFO: Dict[str, Union[SubaruCarInfo, List[SubaruCarInfo]]] = {
   CAR.WRX_PREGLOBAL: SubaruCarInfo("Subaru WRX 2016-18"),
 }
 
+# --- CAN-based fingerprints (address -> dlc) ---
+FINGERPRINTS: Dict[str, List[Dict[int, int]]] = {
+  CAR.OUTBACK: [{
+    0x002: 8, 0x040: 8, 0x041: 8, 0x044: 8, 0x048: 8, 0x049: 8, 0x04A: 8,
+    0x110: 8, 0x111: 8, 0x112: 8, 0x118: 8, 0x119: 8, 0x11A: 8, 0x11E: 8,
+    0x11F: 8, 0x121: 8, 0x122: 8, 0x124: 8, 0x138: 8, 0x139: 8, 0x13A: 8,
+    0x13B: 8, 0x13C: 8, 0x145: 8, 0x146: 8, 0x151: 8, 0x153: 8, 0x155: 8,
+    0x157: 8, 0x16A: 8, 0x174: 8, 0x220: 8, 0x221: 8, 0x222: 8, 0x228: 8,
+    0x22A: 8, 0x22B: 8, 0x22C: 8, 0x22D: 8, 0x23B: 8, 0x240: 8, 0x241: 8,
+    0x2D2: 8, 0x31E: 8, 0x31F: 8, 0x321: 8, 0x322: 8, 0x323: 8, 0x324: 8,
+    0x325: 8, 0x326: 8, 0x327: 8, 0x328: 8, 0x32B: 8, 0x330: 8, 0x33A: 8,
+    0x33B: 8, 0x342: 8, 0x345: 8, 0x346: 8, 0x347: 8, 0x34A: 8, 0x390: 8,
+    0x393: 8, 0x3A2: 8, 0x3AC: 8, 0x3AD: 8, 0x3C4: 8, 0x3C5: 8, 0x3C6: 8,
+    0x3C7: 8, 0x3D5: 8, 0x3FB: 8, 0x500: 8, 0x502: 8, 0x546: 8, 0x54F: 8,
+    0x551: 8, 0x651: 8, 0x660: 8, 0x672: 8, 0x68D: 8, 0x6B1: 8, 0x6BB: 8,
+    0x6BC: 8, 0x6CF: 8, 0x6DE: 8,
+  }],
+}
+
 SUBARU_VERSION_REQUEST = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER]) + \
   p16(uds.DATA_IDENTIFIER_TYPE.APPLICATION_DATA_IDENTIFICATION)
 SUBARU_VERSION_RESPONSE = bytes([uds.SERVICE_TYPE.READ_DATA_BY_IDENTIFIER + 0x40]) + \
@@ -691,7 +710,10 @@ FW_VERSIONS = {
       b'\xcb\xfd\xd0\x80\x00',
     ],
   },
+
+  # --------- UPDATED: 2024 Outback (adds your new ECU FW blobs) ---------
   CAR.OUTBACK: {
+    # ABS existing ROMs (keep)
     (Ecu.abs, 0x7b0, None): [
       b'\xa1  \x06\x01',
       b'\xa1  \a\x00',
@@ -703,23 +725,32 @@ FW_VERSIONS = {
       b'\xa1  \x07\x02',
       b'\xa1  \x08\x00',
       b'\xa1 "\t\x00',
-      # 2024 Outback ABS (from DID F182): b1 20 23 01 03
+      # 2024 Outback ABS (from your scan)
+      b'\xa1 $\x16\x00',
+      # 2024 Outback ABS (from DID F182 comment in your file)
       b'\xb1 #\x01\x03',
     ],
+    # EPS existing + 2024 EPS from your scan
     (Ecu.eps, 0x746, None): [
       b'\x9b\xc0\x10\x00',
       b'\x9b\xc0\x20\x00',
       b'\x1b\xc0\x10\x00',
-      b'+\xc0\x10\x00',   # 2024 Outback EPS
+      b'+\xc0\x10\x00',
+      b'+\xc0\x10\x11\x00',  # 2024 Outback EPS (new)
     ],
+    # Forward camera existing + 2024 camera from your scan
     (Ecu.fwdCamera, 0x787, None): [
       b'\x00\x00eJ\x00\x1f@ \x19\x00',
       b'\000\000e\x80\000\037@ \031\000',
       b'\x00\x00e\x9a\x00\x00\x00\x00\x00\x00',
       b'\x00\x00e\x9a\x00\x1f@ 1\x00',
       b'\x00\x00eJ\x00\x00\x00\x00\x00\x00',
-      b'\xb1 \x23\x01\x03',   # 2024 Outback/Onyx forward camera
+      b'\xb1 \x23\x01\x03',
+      # 2024 Outback camera blobs (new)
+      b'\t!\x08\x046\x05!\x08\x01/',
+      b' \x02\x0e',
     ],
+    # Engine: keep existing 0x7e0 entries AND add your 0x7a2 entry
     (Ecu.engine, 0x7e0, None): [
       b'\xbc,\xa0q\x07',
       b'\xbc\"`@\a',
@@ -733,6 +764,10 @@ FW_VERSIONS = {
       b'\xe3,\xa0@\x07',
       b'\xbc,\xa0u\x07',
     ],
+    (Ecu.engine, 0x7a2, None): [
+      b'\xfb"`p\x07',  # 2024 Outback engine (new)
+    ],
+    # Transmission: keep existing 0x7e1 entries AND add your 0x7a3 entry
     (Ecu.transmission, 0x7e1, None): [
       b'\xa5\xfe\xf7@\x00',
       b'\xa5\xf6D@\x00',
@@ -742,6 +777,9 @@ FW_VERSIONS = {
       b'\xa7\xf6D@\x00',
       b'\xa7\xfe\xf4@\x00',
       b'\xa5\xfe\xf8@\x00',
+    ],
+    (Ecu.transmission, 0x7a3, None): [
+      b'\xa9\x127\x01p',  # 2024 Outback CVT (new)
     ],
   },
 }
